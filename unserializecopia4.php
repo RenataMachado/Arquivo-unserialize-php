@@ -1,7 +1,7 @@
 <?php
 
 // import .xml file
-$file = 'campos-velhos-05-12-.2024.xml';
+$file = 'campos-velhos-05-12-2024.xml';
 $wordpress_xml = file_get_contents($file);
 
 
