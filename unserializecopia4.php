@@ -1,4 +1,4 @@
- <?php
+<?php
 
 // import .xml file
 $file = 'campos-velhos-05-12-.2024.xml';
@@ -29,94 +29,46 @@ if (count($postmeta[1]) > 0) {
 $i = 0;
 $unserialized[] = array();
 foreach ($locais as $local) {
-
     if ($i == 0) {
         $i++;
         continue;
     }
-    // $locais_unserialized[$i] = unserialize($local);
-    
-    // if ( isset($locais_unserialized[$i])){
-        
+
+    $locais_unserialized[$i] = unserialize($local);
+
+    if (isset($locais_unserialized[$i])) {
+        for ($j = 0; isset($locais_unserialized[$i][$j]); $j++) {
+            if (!is_null($locais_unserialized[$i][$j])) {
+                $new = array();
+                $old = $locais_unserialized[$i][$j];
+
+                // Mapear os dados para as meta keys do XML
+                $new["_locais_{$j}_nome_do_local"] = $old['local'] ?? "";
+                $new["_locais_{$j}_endereco"] = $old['endereco'] ?? "";
+                $new["_locais_{$j}_cidade"] = $old['cidade'] ?? "";
+                $new["_locais_{$j}_cep"] = $old['cep'] ?? "";
+                $new["_locais_{$j}_telefone_1"] = $old['telefone_1'] ?? "";
+                $new["_locais_{$j}_telefone_2"] = $old['telefone_2'] ?? "";
+                $new["_locais_{$j}_email"] = $old['email'] ?? "";
+                $new["_locais_{$j}_site"] = $old['site'] ?? "";
+                $new["_locais_{$j}_observacoes"] = $old['observacoes'] ?? "";
+                #$new["locais_{$j}"]   = $local["{$ii}"] ?? "";
 		
-		// for ( $j=0; isset($locais_unserialized[$i][$j]); $j++) {
-            // if ( !is_null($locais_unserialized[$i][$j]) ){
-                // $new = array();
-                // $old = $locais_unserialized[$i][$j];
-                // $new["locais_".$j."_nome_do_local"] = isset($old['local']) ? $old['local'] : "";
-                // $new["locais_".$j."_endereco"]      = isset($old['endereco']) ? $old['endereco'] : "";
-                // $new["locais_".$j."_cidade"]        = isset($old['cidade']) ? $old['cidade'] : "";
-                // $new["locais_".$j."_cep"]           = isset($old['cep']) ? $old['cep'] : "";
-                // $new["locais_".$j."_telefone_1"]    = isset($old['telefone_1']) ? $old['telefone_1'] : "";
-                // $new["locais_".$j."_telefone_2"]    = isset($old['telefone_2']) ? $old['telefone_2'] : "";
-                // $new["locais_".$j."_email"]         = isset($old['email']) ? $old['email'] : "";
-                // $new["locais_".$j."_site"]         = isset($old['site']) ? $old['site'] : "";
-                // $new["locais_".$j."_observacoes"]   = isset($old['observacoes']) ? $old['observacoes'] : "";
-				
-				
-				
-				
-				
-                // for ( $k=0; isset($old['horarios'][$k]['dias']) and !is_null($old['horarios'][$k]['dias']); $k++) {
-                    // $quantidade_locais = count($old['horarios'][$k]['dias']);
-                    // $keys_locais = array_keys($old['horarios'][$k]['dias']);
-                    // $locais_serialized = "a:$quantidade_locais:{";
-                    // for ($a=0; $a < $quantidade_locais; $a++){
-                        // $locais_serialized .= "i:$a;s:3:\"$keys_locais[$a]\";";
-                    // }
-                    // $locais_serialized .= "}";
-                    // $new["locais_".$j."_dias_da_semana__horario"] = $k+1;
-                    // $new["locais_".$j."_dias_da_semana__horario_".$k."_dias"] = $locais_serialized;
-                    // $new["locais_".$j."_dias_da_semana__horario_".$k."_hora_i"] = $old['horarios'][$k]['hora_i'];
-                    // $new["locais_".$j."_dias_da_semana__horario_".$k."_hora_f"] = $old['horarios'][$k]['hora_f'];
-                    // $unserialized[$i] = $new;
-                    // unset($locais_serialized);
-                // }
-            // }
-            // $new["nome_do_evento"]= isset($old['nome']) ? $old['nome'] : "";
-				// $new["data_inicial"]= isset($old['data_inicio']) ? $old['data_inicio'] : "";
-				// $new["data_final"]= isset($old['data_fim']) ? $old['data_fim'] : "";
-				// $new["classificacao_indicativa_"]= isset($old['classificacao']) ? $old['classificacao'] : "";
-				// $new["preco_"]= isset($old['preco']) ? $old['preco'] : "";
-            // $unserialized[$i]['locais'] = $j+1;
-        // }
-    // }
-    
-    foreach ($locais as $i => $local) {
-        if (isset($local)) { // Verifica se o local atual não é nulo
-            $new = array();
-            $new["locais_{$i}_nome_do_local"] = $local['local'] ?? "";
-            $new["locais_{$i}_endereco"]      = $local['endereco'] ?? "";
-            $new["locais_{$i}_cidade"]        = $local['cidade'] ?? "";
-            $new["locais_{$i}_cep"]           = $local['cep'] ?? "";
-            $new["locais_{$i}_telefone_1"]    = $local['telefone_1'] ?? "";
-            $new["locais_{$i}_telefone_2"]    = $local['telefone_2'] ?? "";
-            $new["locais_{$i}_email"]         = $local['email'] ?? "";
-            $new["locais_{$i}_site"]          = $local['site'] ?? "";
-            $new["locais_{$i}_observacoes"]   = $local['observacoes'] ?? "";
 
-            // Processa os horários diretamente, sem serialização
-            if (!empty($local['horarios'])) {
-                foreach ($local['horarios'] as $k => $horario) {
-                    $new["locais_{$i}_dias_da_semana__horario"] = $k + 1;
-                    $new["locais_{$i}_dias_da_semana__horario_{$k}_dias"] = implode(',', array_keys($horario['dias'] ?? []));
-                    $new["locais_{$i}_dias_da_semana__horario_{$k}_hora_i"] = $horario['hora_i'] ?? "";
-                    $new["locais_{$i}_dias_da_semana__horario_{$k}_hora_f"] = $horario['hora_f'] ?? "";
+                // Processar os horários
+                for ($k = 0; isset($old['horarios'][$k]['dias']) and !is_null($old['horarios'][$k]['dias']); $k++) {
+                    $dias = $old['horarios'][$k]['dias'];
+                    $dias_serialized = serialize(array_keys($dias));
+
+                    $new["_locais_{$j}_dias_da_semana__horario_{$k}_dias"] = $dias_serialized;
+                    $new["_locais_{$j}_dias_da_semana__horario_{$k}_hora_i"] = $old['horarios'][$k]['hora_i'] ?? "";
+                    $new["_locais_{$j}_dias_da_semana__horario_{$k}_hora_f"] = $old['horarios'][$k]['hora_f'] ?? "";
                 }
+
+                $unserialized[$i] = $new;
             }
-
-            // Adiciona informações gerais do evento
-            $new["informacoes_i_nome_do_evento"] = $local['nome'] ?? "";
-            $new["informacoes_i_data_inicial"] = $local['data_inicio'] ?? "";
-            $new["informacoes_0_data_final"] = $local['data_fim'] ?? "";
-            $new["classificacao_0_indicativa_"] = $local['classificacao'] ?? "";
-            $new["preco_"] = $local['preco'] ?? "";
-
-            // Adiciona os dados processados ao array final
-            $unserialized[$i] = $new;
         }
     }
-    
     $i++;
 }
 
@@ -149,14 +101,32 @@ foreach ($xml->channel->item as $item) {
 }
 $i = 1;
 foreach ($xml->channel->item as $item) {
-    $current_data = isset($unserialized[$i]) ? $unserialized[$i] : [];
+    // Remove a meta_key antiga "locais"
+    foreach ($item->children($namespace_wp) as $postmeta) {
+        foreach ($postmeta->children($namespace_wp) as $meta) {
+            if ($meta->getName() == 'meta_key' && $meta->__toString() == 'locais') {
+                unset($postmeta[0]); // Remove a entrada antiga
+                break 2; // Sai do loop
+            }
+        }
+    }
+
+    // Adiciona os novos metadados ao XML
+    $current_data = $unserialized[$i] ?? [];
     if (!empty($current_data)) {
-        $keys = array_keys($current_data);
-        foreach ( $keys as $key ) {
-            //$postmeta = $item->addChild('postmeta');
+        foreach ($current_data as $key => $value) {
+            // Adiciona cada meta key ao XML
             $postmeta = $item->addChild('postmeta', null, $namespace_wp);
             $postmeta->addChildWithCData('meta_key', $key, $namespace_wp);
-            $postmeta->addChildWithCData('meta_value', $unserialized[$i][$key], $namespace_wp);
+            $postmeta->addChildWithCData('meta_value', $value, $namespace_wp);
+
+            // Adiciona a versão visível sem o prefixo "_", se necessário
+            if (strpos($key, '_locais_') === 0) {
+                $visible_key = ltrim($key, '_'); // Remove o prefixo "_"
+                $postmeta = $item->addChild('postmeta', null, $namespace_wp);
+                $postmeta->addChildWithCData('meta_key', $visible_key, $namespace_wp);
+                $postmeta->addChildWithCData('meta_value', $value, $namespace_wp);
+            }
         }
     }
     $i++;
@@ -183,3 +153,5 @@ foreach ($xml->channel->item as $item) {
 //*/
 //echo $xml->asXML();
 $xml->asXML('05-12-2024-noticia-gerado.xml');
+
+?>
